@@ -1,0 +1,32 @@
+env:
+  browser: true
+  es2021: true
+extends:
+  - 'plugin:react/recommended'
+  - airbnb
+  - next
+  - 'next/core-web-vitals'
+  - 'plugin:import/errors'
+settings:
+  'import/resolver':
+    alias:
+      extensions:
+        - ".js"
+        - ".jsx"
+      map:
+        - - "@"
+          - "./src/"
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+  ecmaVersion: latest
+  sourceType: module
+plugins:
+  - react
+rules:
+  react/destructuring-assignment: off
+  react/jsx-filename-extension: off
+  camelcase: 0
+  react/jsx-props-no-spreading: off
+  '@next/next/no-img-element': warn
+  no-underscore-dangle: 0
