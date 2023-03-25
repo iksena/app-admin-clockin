@@ -10,9 +10,7 @@ const _handleLogin = (router) => async ({ email, password }) => {
   const url = '/api/login';
   try {
     await fetcher(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
       method: 'POST',
     });

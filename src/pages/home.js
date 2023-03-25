@@ -1,7 +1,9 @@
 import { Col, Menu, Row } from 'antd';
-import withSession from '@/lib/session';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+import withSession from '@/lib/session';
+import fetcher from '@/lib/fetcher';
 import ProfileForm from '@/components/profile-form';
 
 function MenuComponent({ selectedKey = 'profile', setMenu }) {
@@ -22,6 +24,22 @@ function MenuComponent({ selectedKey = 'profile', setMenu }) {
   );
 }
 
+const _handleUpdateUser = (router) => async (values) => {
+  const url = '/api/employees';
+  try {
+    await fetcher(url, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(values),
+      method: 'PATCH',
+    });
+    router.reload();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 function Home({ user }) {
   const router = useRouter();
   const [menu, setMenu] = useState('profile');
@@ -39,7 +57,7 @@ function Home({ user }) {
       </Col>
       <Col span={20}>
         {menu === 'profile' && (
-          <ProfileForm user={user} onFinish={console.log} />
+          <ProfileForm user={user} onFinish={_handleUpdateUser(router)} />
         )}
       </Col>
     </Row>

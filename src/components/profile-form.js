@@ -100,7 +100,6 @@ function ProfileForm({ onFinish, user }) {
         <Button
           type="primary"
           htmlType="submit"
-          disabled={!form.isFieldsTouched()}
         >
           Save
         </Button>
