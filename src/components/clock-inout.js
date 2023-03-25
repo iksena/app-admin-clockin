@@ -1,7 +1,7 @@
-const {
+import { format } from 'date-fns';
+import {
   Row, Col, Typography, Button,
-} = require('antd');
-const { default: format } = require('date-fns/format');
+} from 'antd';
 
 const _findLastAbsence = (absences = []) => {
   const lastClockIn = absences.find((absence) => absence?.status === 'CLOCK_IN');
@@ -13,11 +13,11 @@ const _findLastAbsence = (absences = []) => {
 function ClockInOut({ absences, onClockIn, onClockOut }) {
   const [clockIn, clockOut] = _findLastAbsence(absences);
   const dateFormat = 'd MMM yyyy';
-  const timeFormat = 'hh:mm';
+  const timeFormat = 'HH:mm';
 
   return (
     <>
-      <Row span={16}>
+      <Row span={16} justify="center">
         <Col span={8}>
           <Typography.Text>{format(new Date(clockIn), dateFormat)}</Typography.Text>
           <Typography.Title level={3}>{format(new Date(clockIn), timeFormat)}</Typography.Title>
@@ -27,7 +27,7 @@ function ClockInOut({ absences, onClockIn, onClockOut }) {
           <Typography.Title level={3}>{format(new Date(clockOut), timeFormat)}</Typography.Title>
         </Col>
       </Row>
-      <Row span={16}>
+      <Row span={16} justify="center">
         <Col span={8}>
           <Button type="primary" onClick={onClockIn}>Clock In</Button>
         </Col>
