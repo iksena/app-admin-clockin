@@ -6,7 +6,7 @@ export default function withSession(handler) {
     password: constants.SESSION_PASSWORD,
     cookieName: 'employee-clockin',
     cookieOptions: {
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
     },
     ttl: constants.SESSION_EXPIRY_SECONDS,
   });
