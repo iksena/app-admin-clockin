@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import withSession from '@/lib/session';
 import fetcher from '@/lib/fetcher';
 import ProfileForm from '@/components/profile-form';
+import constants from '@/lib/constants';
+import ClockInOut from '@/components/clock-inout';
 
 function MenuComponent({ selectedKey = 'profile', setMenu }) {
   const menuItems = [
@@ -40,7 +42,7 @@ const _handleUpdateUser = (router) => async (values) => {
   }
 };
 
-function Home({ user }) {
+function Home({ user, absences }) {
   const router = useRouter();
   const [menu, setMenu] = useState('profile');
 
@@ -59,6 +61,9 @@ function Home({ user }) {
         {menu === 'profile' && (
           <ProfileForm user={user} onFinish={_handleUpdateUser(router)} />
         )}
+        {menu === 'clock' && (
+          <ClockInOut absences={absences} />
+        )}
       </Col>
     </Row>
   );
@@ -76,9 +81,15 @@ export const getServerSideProps = withSession(async ({ req }) => {
     };
   }
 
+  const { email } = user;
+  const todayDate = new Date().toISOString();
+  const url = `${constants.BASE_URL}/absences?email=${email}&startDate=${todayDate}&endDate=${todayDate}`;
+  const absences = await fetcher(url);
+
   return {
     props: {
       user,
+      absences,
     },
   };
 });
