@@ -7,6 +7,11 @@ const {
 
 const columns = [
   {
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
+  },
+  {
     title: 'Clock In',
     dataIndex: 'clockIn',
     key: 'clockIn',
@@ -23,6 +28,7 @@ const _mapAbsences = (absences) => {
 
   return absences.map((absence) => ({
     key: absence.date,
+    email: absence.email,
     clockIn: absence.clockIn ? format(new Date(absence.clockIn), dateFormat) : '-',
     clockOut: absence.clockOut ? format(new Date(absence.clockOut), dateFormat) : '-',
   }), []);

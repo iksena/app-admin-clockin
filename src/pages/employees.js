@@ -12,6 +12,7 @@ import fetcher from '@/lib/fetcher';
 import constants from '@/lib/constants';
 import EmployeeList from '@/components/employee-list';
 import ProfileForm from '@/components/profile-form';
+import MenuComponent from '@/components/menu';
 
 function ErrorView({ error }) {
   return (
@@ -46,7 +47,7 @@ const _handleUpdateUser = (router, baseUrl, isNew, setNew) => async (values) => 
   }
 };
 
-function Home({
+function Employees({
   employees, error, baseUrl,
 }) {
   const router = useRouter();
@@ -67,7 +68,12 @@ function Home({
           <Row justify="center" style={{ marginTop: 5 }}>
             <Typography.Title level={2}>Admin Clockin</Typography.Title>
           </Row>
-          <Row justify="center" style={{ marginTop: 5 }}>
+          <Row justify="center">
+            <Col span={8} sm={10} xs={18}>
+              <MenuComponent selectedKey="employees" />
+            </Col>
+          </Row>
+          <Row justify="center" style={{ marginTop: 10 }}>
             <Col span={8} sm={10} xs={18}>
               <EmployeeList
                 employees={employees}
@@ -121,4 +127,4 @@ export const getServerSideProps = async () => {
   }
 };
 
-export default Home;
+export default Employees;
