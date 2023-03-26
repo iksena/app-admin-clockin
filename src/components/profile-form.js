@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 const {
   Form, Input, Button, Avatar, Row,
 } = require('antd');
@@ -11,9 +13,6 @@ const formItemLayout = {
   },
 };
 const formTailLayout = {
-  labelCol: {
-    span: 4,
-  },
   wrapperCol: {
     span: 8,
     offset: 4,
@@ -24,10 +23,12 @@ function ProfileForm({ onFinish, user }) {
   const [form] = Form.useForm();
   const imageUri = Form.useWatch('imageUri', form);
 
+  useEffect(() => form.resetFields(), [form, user]);
+
   return (
     <Form
       form={form}
-      name="dynamic_rule"
+      name="employee"
       style={{ maxWidth: 600 }}
       onFinish={onFinish}
       initialValues={{
@@ -63,7 +64,7 @@ function ProfileForm({ onFinish, user }) {
           required: true, type: 'string', max: 100, message: 'Please input your name',
         }]}
       >
-        <Input placeholder="Please input your name" type="name" />
+        <Input placeholder="Please input your name" />
       </Form.Item>
       <Form.Item
         {...formItemLayout}
