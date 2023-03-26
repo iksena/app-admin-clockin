@@ -34,17 +34,42 @@ const _handleUpdateUser = (router) => async (values) => {
       body: JSON.stringify(values),
       method: 'PATCH',
     });
-    router.reload();
+    router.push('/home?menu=profile');
 
     return true;
   } catch (error) {
+    // TODO add error handling snackbar
     return false;
   }
 };
 
-function Home({ user, absences }) {
+const _handleClockInOut = (user, absenceStatus, router, baseUrl) => async () => {
+  const url = `${baseUrl}/absences`;
+  try {
+    await fetcher(url, {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: user.email,
+        time: new Date().toISOString(),
+        status: absenceStatus,
+      }),
+      method: 'POST',
+    });
+    // TODO save value directly
+    router.push('/home?menu=absences');
+
+    return true;
+  } catch (error) {
+    // TODO add error handling snackbar
+    return false;
+  }
+};
+
+function Home({
+  user, absences, selectedMenu, baseUrl,
+}) {
   const router = useRouter();
-  const [menu, setMenu] = useState('profile');
+  const [menu, setMenu] = useState(selectedMenu);
 
   useEffect(() => {
     if (menu === 'logout') {
@@ -55,21 +80,26 @@ function Home({ user, absences }) {
   return (
     <Row justify="center">
       <Col span={4}>
-        <MenuComponent selectedKey={menu} setMenu={setMenu} />
+        <MenuComponent selectedKey={selectedMenu} setMenu={setMenu} />
       </Col>
       <Col span={20}>
         {menu === 'profile' && (
           <ProfileForm user={user} onFinish={_handleUpdateUser(router)} />
         )}
         {menu === 'clock' && (
-          <ClockInOut absences={absences} />
+          <ClockInOut
+            absences={absences}
+            onClockIn={_handleClockInOut(user, 'CLOCK_IN', router, baseUrl)}
+            onClockOut={_handleClockInOut(user, 'CLOCK_OUT', router, baseUrl)}
+          />
         )}
       </Col>
     </Row>
   );
 }
 
-export const getServerSideProps = withSession(async ({ req }) => {
+export const getServerSideProps = withSession(async ({ req, query }) => {
+  const selectedMenu = query?.menu ?? 'profile';
   const user = req.session.get('user');
   const isLoggedIn = (user && user.isLoggedIn) || false;
   if (!isLoggedIn) {
@@ -88,8 +118,10 @@ export const getServerSideProps = withSession(async ({ req }) => {
 
   return {
     props: {
+      baseUrl: constants.BASE_URL,
       user,
       absences,
+      selectedMenu,
     },
   };
 });
